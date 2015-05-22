@@ -22,20 +22,19 @@ def compute_failures():
         for child_character, child in node.children.items():
             queue.append(child)
             state = node.failure
+
             found = False
-            state_failure = None
-            while found is False:
+            while not found:
                 for state_character, state_child in state.children.items():
-                    state_failure = state_child
                     if state_character == child_character:
                         found = True
                         break
-                if found is False:
+                if not found:
                     if state == root:
                         found = True
-                        state_failure = root
+                        state_child = root
                     else:
                         state = state.failure
-            child.failure = state_failure
+            child.failure = state_child
 
 compute_failures()
