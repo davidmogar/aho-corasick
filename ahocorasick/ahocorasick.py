@@ -1,5 +1,7 @@
 from collections import deque
-from trie import Trie
+
+from .trie import Trie
+
 
 class Ahocorasick:
 
@@ -38,19 +40,26 @@ class Ahocorasick:
                             state = state.failure
                 child.failure = state_child
 
-    def search(self, text):
+    def search(self, text, longest=True):
         current_node = self._trie_root
+        match = None
+
         for index, character in enumerate(text.lower()):
             found = False
+            matched = False
             for child_character, child in current_node.children.items():
                 if child_character == character:
                     current_node = child
                     found = True
 
                     if child.final:
+                        matched = True
                         end_index = index + 1
                         value = child.value
-                        yield end_index - len(value), end_index, value
+                        match = end_index - len(value), end_index, value
                         break
+            if match and (not longest or (not matched or index == len(text) - 1)):
+                yield match
+                match = None
             if not found and current_node != self._trie_root:
                 current_node = current_node.failure
