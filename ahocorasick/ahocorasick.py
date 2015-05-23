@@ -43,6 +43,7 @@ class Ahocorasick:
     def search(self, text, longest=True):
         current_node = self._trie_root
         match = None
+        last_index = len(text) - 1
 
         for index, character in enumerate(text.lower()):
             found = False
@@ -58,7 +59,7 @@ class Ahocorasick:
                         value = child.value
                         match = end_index - len(value), end_index, value
                         break
-            if match and (not longest or (not matched or index == len(text) - 1)):
+            if match and (not longest or (not matched or index == last_index)):
                 yield match
                 match = None
             if not found and current_node != self._trie_root:
